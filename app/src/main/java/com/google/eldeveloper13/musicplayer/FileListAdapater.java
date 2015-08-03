@@ -12,11 +12,15 @@ import java.util.List;
 
 public class FileListAdapater extends ArrayAdapter<File> {
 
+    private File currentDir;
+
     private class ViewHolder {
         TextView txtFileName;
     }
-    public FileListAdapater(Context context, List<File> files) {
+
+    public FileListAdapater(Context context, File currentDir, List<File> files) {
         super(context, -1, files);
+        this.currentDir = currentDir;
     }
 
     @Override
@@ -34,7 +38,13 @@ public class FileListAdapater extends ArrayAdapter<File> {
         }
 
         File file = getItem(position);
-        viewHolder.txtFileName.setText(file.getName());
+        if (file.equals(currentDir.getParentFile())) {
+            viewHolder.txtFileName.setText("..");
+        } else if (file.isDirectory()){
+            viewHolder.txtFileName.setText(file.getName()+"/");
+        } else {
+            viewHolder.txtFileName.setText(file.getName());
+        }
 
         return convertView;
     }

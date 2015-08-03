@@ -26,32 +26,42 @@ public class FileNavigationActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_navigation);
 
-        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES);
+        fileListView = (ListView) findViewById(R.id.fileList);
+        fileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                File file = adapter.getItem(position);
+                if (file.isDirectory()) {
+                    openDirectory(file);
+                } else {
+                    Intent musicServiceIntent = new Intent(FileNavigationActivity.this, MusicPlayerService.class);
+                    musicServiceIntent.setAction(MusicPlayerService.ACTION_PLAY);
+                    musicServiceIntent.putExtra(MusicPlayerService.SONG_URI, file.getAbsolutePath());
+                    startService(musicServiceIntent);
+                }
+            }
+        });
 
+        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES);
+        openDirectory(directory);
+
+    }
+
+    private void openDirectory(File directory) {
         setTitle(directory.getAbsolutePath());
         File[] files = directory.listFiles();
         List<File> fileList;
         if (files == null) {
             fileList = new ArrayList<>();
         } else {
-            fileList = Arrays.asList(files);
+            fileList = new ArrayList<>(Arrays.asList(files));
         }
-        adapter = new FileListAdapater(this, fileList);
-
-        fileListView = (ListView) findViewById(R.id.fileList);
+        File parentDir = directory.getParentFile();
+        if (parentDir != null && parentDir.exists()) {
+            fileList.add(0, parentDir);
+        }
+        adapter = new FileListAdapater(this, directory, fileList);
         fileListView.setAdapter(adapter);
-
-        fileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                File file = adapter.getItem(position);
-                Intent musicServiceIntent = new Intent(FileNavigationActivity.this, MusicPlayerService.class);
-                musicServiceIntent.setAction(MusicPlayerService.ACTION_PLAY);
-                musicServiceIntent.putExtra(MusicPlayerService.SONG_URI, file.getAbsolutePath());
-                startService(musicServiceIntent);
-
-            }
-        });
     }
 
 //    @Override
