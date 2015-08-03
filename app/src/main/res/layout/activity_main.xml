@@ -15,10 +15,21 @@
         android:text="@string/hello_world" />
 
     <Button
+        android:id="@+id/btn_open_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open Music Directory"/>
+    <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Clare de Lune" />
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Spring" />
+
     <Button
         android:id="@+id/btn_stop"
         android:layout_width="wrap_content"

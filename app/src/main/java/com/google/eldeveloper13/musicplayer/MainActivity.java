@@ -14,12 +14,34 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button btnOpenFile = (Button) findViewById(R.id.btn_open_file);
+        btnOpenFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent openDirectory = new Intent(MainActivity.this, FileNavigationActivity.class);
+                startActivity(openDirectory);
+            }
+        });
+
         Button button1 = (Button) findViewById(R.id.button1);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent musicServiceIntent = new Intent(MainActivity.this, MusicPlayerService.class);
                 musicServiceIntent.setAction(MusicPlayerService.ACTION_PLAY);
+                musicServiceIntent.putExtra(MusicPlayerService.SONG_URI, "android.resource://com.google.eldeveloper13.musicplayer/raw/clare_de_lune");
+                startService(musicServiceIntent);
+            }
+        });
+
+        Button button2 = (Button) findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent musicServiceIntent = new Intent(MainActivity.this, MusicPlayerService.class);
+                musicServiceIntent.setAction(MusicPlayerService.ACTION_PLAY);
+                musicServiceIntent.putExtra(MusicPlayerService.SONG_URI, "android.resource://com.google.eldeveloper13.musicplayer/raw/vivaldi_spring");
                 startService(musicServiceIntent);
             }
         });
